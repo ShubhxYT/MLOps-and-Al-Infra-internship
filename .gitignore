@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+Mem0_ AI_ML & Generative AI Developer Intern Assignment.pdf
+plan.md
+things/plan.md
+things/Mem0_ AI_ML & Generative AI Developer Intern Assignment/
