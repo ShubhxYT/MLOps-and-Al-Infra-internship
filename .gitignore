@@ -13,6 +13,7 @@ __pycache__/
 dist/
 *.egg-info/
 
+things/
 # Streamlit
 .streamlit/
 
