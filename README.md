@@ -37,24 +37,27 @@ On M-series chips (M1/M2/M3), the base model transcribes a 10-second clip in und
 ## Setup
 
 ### Prerequisites
-- Python 3.12+
-- [uv](https://github.com/astral-sh/uv) package manager
+- Python 3.12+ (for local setup)
+- [uv](https://github.com/astral-sh/uv) package manager (for local setup)
+- **OR** Docker + Coolify (for self-hosted deployment)
 - A free [Groq API key](https://console.groq.com) (free tier: 1,000 req/day)
 
-### 1. Install dependencies
+### Option A: Local Setup (Development)
+
+#### 1. Install dependencies
 
 ```bash
 uv sync
 ```
 
-### 2. Configure environment
+#### 2. Configure environment
 
 ```bash
 cp .env.example .env
 # Open .env and add your GROQ_API_KEY
 ```
 
-### 3. Run
+#### 3. Run
 
 ```bash
 uv run streamlit run app.py
@@ -62,6 +65,32 @@ uv run streamlit run app.py
 
 The first launch downloads the Whisper `base` model (~145 MB, ~30–60 seconds).
 The model is cached locally and all subsequent runs are instant.
+
+### Option B: Self-Hosted on Coolify (Production)
+
+MemO-Al is deployed on **[mlops.shubhsomani.tech](https://mlops.shubhsomani.tech)** — a private homelab using Coolify for container orchestration.
+
+**Deploy your own instance:**
+
+1. **Docker Build** — Streamlit app containerized with Python 3.12
+   ```bash
+   docker build -t memo-al .
+   docker run -p 8501:8501 -e GROQ_API_KEY=your_key_here memo-al
+   ```
+
+2. **Coolify Deployment** — See [COOLIFY_SETUP.md](./COOLIFY_SETUP.md) for detailed instructions:
+   - Configure git repo + branch
+   - Set environment variables (`GROQ_API_KEY`)
+   - Bind to port 8501
+   - Auto-restart & health checks enabled
+   - Full logs & rollback history
+
+**Benefits:**
+- Self-hosted on your hardware (no third-party SaaS)
+- Private data — all computations stay in-house
+- Persistent storage for session history
+- CI/CD: Auto-deploy on git push
+- Easy rollback to previous versions
 
 ## Usage
 
@@ -108,4 +137,40 @@ output/                       ← All file operations land here (git-ignored con
 .env                          ← API keys (not committed)
 .env.example                  ← Template
 pyproject.toml
+Dockerfile                    ← Docker image definition
+docker-compose.yml           ← Local Docker Compose for testing
+COOLIFY_SETUP.md             ← Production deployment guide
 ```
+
+## Deployment
+
+### Live Instance
+
+🔗 **[https://mlops.shubhsomani.tech](https://mlops.shubhsomani.tech)**
+
+Deployed on a private homelab using **Coolify** for container orchestration. All data is kept private and self-hosted.
+
+### Deploy Your Own
+
+For detailed self-deployment instructions, see **[COOLIFY_SETUP.md](./COOLIFY_SETUP.md)**
+
+**Quick Start:**
+1. Push to your Git repo
+2. Add to Coolify dashboard
+3. Set `GROQ_API_KEY` environment variable
+4. Deploy to port 8501
+5. Access via your custom domain
+
+### Docker Quick Test
+
+```bash
+# Build locally
+docker build -t memo-al .
+
+# Run with your API key
+docker run -p 8501:8501 \
+  -e GROQ_API_KEY=your_groq_api_key \
+  memo-al
+```
+
+Open `http://localhost:8501`
